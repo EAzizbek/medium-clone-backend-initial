@@ -6,9 +6,21 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UserSerializer, LoginSerializer, ValidationErrorSerializer, TokenResponseSerializer
 from django.contrib.auth import get_user_model
+from drf_spectacular.utils import extend_schema, extend_schema_view
+
 
 User = get_user_model()
 
+@extend_schema_view(
+    post=extend_schema(
+        summary="Sign up a new user",
+        request=UserSerializer,
+        responses={
+            201: UserSerializer,
+            400: ValidationErrorSerializer
+        }
+    )
+)
 class SignupView(APIView):
     serializer_class = UserSerializer
     permission_classes = (permissions.AllowAny,)
@@ -29,6 +41,16 @@ class SignupView(APIView):
 
 
 
+@extend_schema_view(
+    post=extend_schema(
+        summary="Log in a user",
+        request=LoginSerializer,
+        responses={
+            200: TokenResponseSerializer,
+            400: ValidationErrorSerializer,
+        }
+    )
+)
 class LoginView(APIView):
     serializer_class = LoginSerializer
     permission_classes = [permissions.AllowAny]
@@ -52,6 +74,16 @@ class LoginView(APIView):
         else:
             return Response({'detail': 'Hisob maʼlumotlari yaroqsiz'}, status=status.HTTP_401_UNAUTHORIZED)
 
+
+@extend_schema_view(
+    get=extend_schema(
+        summary="Get user information",
+        responses={
+            200: UserSerializer,
+            400: ValidationErrorSerializer
+        }
+    )
+)
 class UsersMe(generics.RetrieveAPIView, generics.UpdateAPIView):
     http_method_names = ['get',]
     queryset = User.objects.filter(is_active=True)
