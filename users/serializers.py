@@ -47,6 +47,10 @@ class LoginSerializer(serializers.Serializer):
         return data
 
 
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'middle_name', 'email', 'avatar']
 class TokenResponseSerializer(serializers.Serializer):
     refresh = serializers.CharField()
     access = serializers.CharField()
