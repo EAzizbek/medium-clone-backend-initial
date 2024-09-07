@@ -1,6 +1,6 @@
 from pathlib import Path
 from decouple import config
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -150,6 +150,9 @@ TIME_ZONE = "Asia/Tashkent"
 USE_I18N = True
 
 USE_TZ = True
+
+BIRTH_YEAR_MIN = 1900
+BIRTH_YEAR_MAX = datetime.now().year
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
