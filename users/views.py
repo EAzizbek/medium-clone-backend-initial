@@ -136,5 +136,10 @@ class LogoutView(generics.GenericAPIView):
 
     @extend_schema(responses=None)
     def post(self, request, *args, **kwargs):
-        UserService.create_tokens(request.user, access='fake_token', refresh='fake_token', is_force_add_to_redis=True)
-        return Response({"detail": "Mufaqqiyatli chiqildi."})
+        if not request.user.is_authenticated:
+            return Response({"error": "Unauthorized"}, status=401)
+
+        UserService.create_tokens(
+            request.user, access='fake_token', refresh='fake_token', is_force_add_to_redis=True
+        )
+        return Response({"detail": "Mufaqqiyatli chiqildi."}, status=200)
