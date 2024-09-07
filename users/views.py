@@ -127,7 +127,7 @@ class UsersMe(generics.RetrieveAPIView, generics.UpdateAPIView):
         request=None,
         responses={
             200: ValidationErrorSerializer,
-            400: ValidationErrorSerializer
+            401: ValidationErrorSerializer
         }
     )
 )
