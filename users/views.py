@@ -9,7 +9,9 @@ from django.contrib.auth import get_user_model
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from django_redis import get_redis_connection
 from .enums import TokenType
-from .services import TokenService, UserService
+from .services import TokenService, UserService,SendEmailService
+import random
+
 
 
 
@@ -120,6 +122,17 @@ class UsersMe(generics.RetrieveAPIView, generics.UpdateAPIView):
         print(cached_value)
 
         return super().partial_update(request, *args, **kwargs)
+
+    def get_serializer_class(self):
+
+        email = self.request.user.email
+        code = random.randint(10000, 99999)
+        SendEmailService.send_email(email, code)  # email jo'natish uchun
+
+        if self.request.method == 'PATCH':
+            return UserUpdateSerializer
+        return UserSerializer
+
 
 @extend_schema_view(
     post=extend_schema(
