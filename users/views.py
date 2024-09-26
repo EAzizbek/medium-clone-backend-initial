@@ -98,55 +98,44 @@ class LoginView(APIView):
         else:
             return Response({'detail': 'Hisob maʼlumotlari yaroqsiz'}, status=status.HTTP_401_UNAUTHORIZED)
 
-    @extend_schema_view(
-        get=extend_schema(
-            summary="Get user information",
-            responses={
-                200: UserSerializer,
-                400: ValidationErrorSerializer
-            }
-        ),
-        patch=extend_schema(
-            summary="Update user information",
-            request=UserUpdateSerializer,
-            responses={
-                200: UserUpdateSerializer,
-                400: ValidationErrorSerializer
-            }
-        )
+@extend_schema_view(
+    get=extend_schema(
+        summary="Get user information",
+        responses={
+            200: UserSerializer,
+            400: ValidationErrorSerializer
+        }
+    ),
+    patch=extend_schema(
+        summary="Update user information",
+        request=UserUpdateSerializer,
+        responses={
+            200: UserUpdateSerializer,
+            400: ValidationErrorSerializer
+        }
     )
-    class UsersMe(generics.RetrieveAPIView, generics.UpdateAPIView):
-        http_method_names = ['get', 'patch']
-        queryset = User.objects.filter(is_active=True)
-        parser_classes = [parsers.MultiPartParser]
-        permission_classes = (IsAuthenticated,)
+)
+class UsersMe(generics.RetrieveAPIView, generics.UpdateAPIView):
+    http_method_names = ['get', 'patch']
+    queryset = User.objects.filter(is_active=True)
+    parser_classes = [parsers.MultiPartParser]
+    permission_classes = (IsAuthenticated,)
 
-        def get_object(self):
-            return self.request.user
+    def get_object(self):
+        return self.request.user
 
-        def get_serializer_class(self):
-            if self.request.method == 'PATCH':
-                return UserUpdateSerializer
-            return UserSerializer
-
-        def patch(self, request, *args, **kwargs):
-            redis_conn = get_redis_connection('default')
-            redis_conn.set('test_key', 'test_value', ex=3600)
-            cached_value = redis_conn.get('test_key')
-            # print(cached_value)
-
-            return super().partial_update(request, *args, **kwargs)
     def get_serializer_class(self):
-
-        email = self.request.user.email
-        code = random.randint(10000, 99999)
-        SendEmailService.send_email(email, code)  # email jo'natish uchun
-
         if self.request.method == 'PATCH':
             return UserUpdateSerializer
         return UserSerializer
 
+    def patch(self, request, *args, **kwargs):
+        redis_conn = get_redis_connection('default')
+        redis_conn.set('test_key', 'test_value', ex=3600)
+        cached_value = redis_conn.get('test_key')
+        print(cached_value)
 
+        return super().partial_update(request, *args, **kwargs)
 @extend_schema_view(
     post=extend_schema(
         summary="Log out a user",
