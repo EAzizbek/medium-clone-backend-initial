@@ -7,6 +7,7 @@ from rest_framework_simplejwt.authentication import AuthUser, JWTAuthentication
 
 from users.enums import TokenType        # keyinroq ushbu faylni yaratib olamiz
 from users.services import TokenService  # keyinroq ushbu faylni yaratib olamiz
+from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
 
