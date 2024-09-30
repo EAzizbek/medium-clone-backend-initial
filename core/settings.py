@@ -3,6 +3,9 @@ from pathlib import Path
 from decouple import config
 from datetime import timedelta, datetime
 from django.utils.translation import gettext_lazy as _
+from loguru import logger
+import sys
+from .custom_logging import InterceptHandler
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -66,6 +69,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     'core.middlewares.CustomLocaleMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'core.middlewares.LogRequestMiddleware',
 
 ]
 
@@ -123,6 +127,7 @@ CACHES = {
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
+logger.info(f"Using redis | URL: {REDIS_URL}")
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -246,6 +251,31 @@ SPECTACULAR_SETTINGS = {
             'in': 'header'
         }
     },
+}
+
+# LOGURU settings
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'intercept': {
+            '()': InterceptHandler,
+            'level': 0,
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'django.log',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['intercept', 'file'],
+            'level': "DEBUG",
+            'propagate': True,
+        },
+    }
 }
 
 
