@@ -27,7 +27,7 @@ class Article(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'Articles'
+        db_table = 'article'
 
     def __str__(self):
         return self.title
