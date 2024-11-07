@@ -6,6 +6,10 @@ class Topic(models.Model):
     description = models.TextField()
     is_active = models.BooleanField(default=True)
 
+    class Meta:
+        db_table = "topic"
+        verbose_name = "Topic"
+
     def __str__(self):
         return self.name
 
