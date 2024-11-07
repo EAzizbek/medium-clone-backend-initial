@@ -9,6 +9,7 @@ class Topic(models.Model):
     class Meta:
         db_table = "topic"
         verbose_name = "Topic"
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
