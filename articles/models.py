@@ -28,7 +28,7 @@ class Article(models.Model):
 
     class Meta:
         db_table = 'article'
-        verbose_name = 'article'
+        verbose_name = 'Article'
 
     def __str__(self):
         return self.title
