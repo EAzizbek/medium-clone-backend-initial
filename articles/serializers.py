@@ -30,3 +30,9 @@ class ClapSerializer(serializers.ModelSerializer):
     class Meta:
         model = Clap  # Replace with the correct model if not Clap
         fields = '__all__'  # Or specify fields explicitly, e.g., ['user', 'article', 'count']
+
+class ArticleDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Article
+        fields = ['id', 'title', 'summary', 'content', 'author', 'topics', 'created_at', 'updated_at']  # Adjust fields as needed
+        depth = 1  # Optional: to include nested details for relationships, like author and topics
