@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from .models import Article
 from .serializers import ArticleSerializer, ArticleCreateSerializer
 
+
 class ArticlesView(viewsets.ModelViewSet):
     queryset = Article.objects.all()
 
@@ -13,3 +14,4 @@ class ArticlesView(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # Current user as author
         serializer.save(author=self.request.user)
+

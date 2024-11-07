@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import Article, Topic
+from .models import Clap
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,3 +25,8 @@ class ArticleCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
         fields = ['title', 'content', 'author', 'topics']
+
+class ClapSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Clap  # Replace with the correct model if not Clap
+        fields = '__all__'  # Or specify fields explicitly, e.g., ['user', 'article', 'count']
